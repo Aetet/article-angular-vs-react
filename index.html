@@ -1,0 +1,844 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Shower Presentation Engine</title>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="node_modules/shower-wrike/styles/screen-16x10.css">
+	<link rel="stylesheet" href="node_modules/prismjs/themes/prism-okaidia.css" media="all">
+	<link rel="stylesheet" href="node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css" media="all">
+	<link rel="shortcut icon" href="pictures/favicon.ico">
+	<link rel="stylesheet" href="node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css" media="all">
+</head>
+<body class="shower list">
+	<style>
+		.line-highlight{
+			background: rgba(255,0,0,0.3);
+			margin-top: 1.3em;
+		}
+		pre.line-numbers {
+			padding-left: 1.8em;
+		}
+		.slide code {
+			font-size: 15px;
+			line-height: 1.5;
+		}
+		.slide pre code {
+			padding: 0;
+			margin: 0;
+			width: 100%;
+		}
+		.slide .active-item {
+			color: #8CC53F;
+		}
+		.slide.img h2 {
+			color: #fff;
+		}
+		img.v {
+			height: 100%;
+			max-width: none;
+		}
+		img.h {
+			width: 100%;
+			max-height: none;
+		}
+	</style>
+	<header class="caption">
+		<h1>
+			Чему можно научиться у Dart: <br>
+			переносим подходы из Dart и Angular2 в SPA на JavaScript
+		</h1>
+		<p>Алексей Золотых</p>
+	</header>
+	<section class="slide" id="h1">
+		<h2>
+			Чему можно научиться у Dart: переносим подходы из Dart и Angular2 в SPA на JavaScript
+			<small>
+				Алексей Золотых
+				<a href="https://github.com/zolotyh">https://github.com/zolotyh</a>
+			</small>
+
+		</h2>
+		<img class="cover" src="pictures/bg.jpg" alt="">
+		<style>
+			#h1 img {
+				width: 100%;
+				max-height: none;
+			}
+			#h1 h2 {
+				color: #fff;
+			}
+			#h1 small {
+				display: block;
+				color: #fff;
+				font-size: 0.6em;
+				margin-top: 10em;
+			}
+			#h1 a {
+				color: #cecece;
+			}
+		</style>
+	</section>
+	<section class="slide">
+		<h2>О Wrike</h2>
+		<ul>
+			<li>Мы работаем с 2007 года</li>
+			<li class="next">11 000 корпоративных клиентов, в числе которых  PayPal, HTC, Citrix, Hootsuite, Pure Storage, Nike, Ecco, Amazon</li>
+			<li class="next">В нашем git более 2 000 000 строк фронтенд кода</li>
+			<li class="next">В нашей команде фронтенда 30 человек</li>
+			<li class="next">Мы используем связку Dart вместе с Angular2 в продакшн</li>
+		</ul>
+	</section>
+	<section class="slide">
+		<h2>О докладе</h2>
+		<ul>
+			<li class="next">Доклад состоит из 2х историй</li>
+			<li class="next">Обе истории основаны на реальных примерах</li>
+			<li class="next">Опыт, которым я хочу поделиться, можно применить у себя</li>
+		</ul>
+	</section>
+	<section class="slide">
+		<h2 class="active-item">История 1</h2>
+		<h2>История 2</h2>
+	</section>
+		<section class="slide img" id="n1">
+		<h2 class="shout shrink">Zone.js</h2>
+		<img class="cover v" src="pictures/a1.jpg" alt="">
+		<style></style>
+	</section>
+	<section class="slide">
+		<h2>При помощи зон вы можете:</h2>
+		<ul>
+			<li>Отследить все асинхронные вызовы в пределах зоны</li>
+			<li>Перехватить все ошибки в пределах зоны, даже в асинхронных функциях</li>
+			<li>Получить ссылку на зону из абсолютно любого места в коде</li>
+			<li>Хранить данные в пределах зоны</li>
+		</ul>
+	</section>
+	<section class="slide">
+		<h2 class="shout">Начинаем разбираться</h2>
+	</section>
+	<section class="slide">
+		<h2>Что будет в консоли?</h2>
+		<pre><code class="language-javascript">var myObject = {
+  method: function(){
+    console.log(this);
+  }
+};
+
+myObject.method();
+		</code></pre>
+	</section>
+	<section class="slide">
+		<h2>Что будет в консоли?</h2>
+		<pre><code class="language-javascript">var myObject = {
+  method: function(){
+    setTimeout(function(){
+      console.log(this);
+    },0);
+  }
+};
+
+myObject.method();
+		</code></pre>
+	</section>
+	<section class="slide">
+		<h2>Думаю, что все ответили правильно</h2>
+		<ol>
+			<li>Ссылка на myObject</li>
+			<li>Ссылка на window</li>
+		</ol>
+	</section>
+	<section class="slide">
+		<h2>Почему так происходит?</h2>
+		<h2 class="next">&mdash; теряется контекст</h2>
+	</section>
+	<section class="slide" id="n2">
+		<h2>Схема работы</h2>
+		<img src="pictures/js.svg" alt="">
+		<style>
+			#n2 img {
+				width: 80%;
+				margin-top: -40px;
+			}
+		</style>
+	</section>
+	<section class="slide">
+		<h2>Как можно исправить?</h2>
+		<ul class="next">
+			<li>Передать контекст через замыкание</li>
+			<li>Задать контекст через bind (apply, call)</li>
+		</ul>
+	</section>
+	<section class="slide">
+		<h2>Представьте себе, что мы хотим контролировать контекст выполнения чужого кода</h2>
+	</section>
+	<section class="slide" id="jquery">
+		<img width="80%" src="pictures/code.svg" alt="">
+		<style>
+			#jquery img{
+				display: block;
+				margin: 0 auto;
+			}
+		</style>
+	</section>
+	<section class="slide">
+		<h2>А что будет, если перехватывать все обращения в Web Api и передавать контекст через замыкания?</h2>
+		<img src="pictures/15.gif" alt="">
+	</section>
+	<section class="slide">
+		<h2>Что нужно заменить?</h2>
+		<ul>
+			<li>
+				setInterval()
+			</li>
+			<li>
+				alert()
+			</li>
+			<li>
+				prompt()
+			</li>
+			<li>
+				requestAnimationFrame()
+			</li>
+			<li>
+				addEventListener()
+			</li>
+			<li>
+				removeEventListener()
+			</li>
+		</ul>
+	</section>
+	<section class="slide">
+		<h2>&mdash; Да, но это же манки патчинг</h2>
+		<h2 class="next">&mdash; Именно, посмотрите, как это круто!</h2>
+	</section>
+	<section class="slide">
+		<h2>Пример</h2>
+		<pre class="line-numbers" data-start="1"><code class="language-javascript">var main = function(){
+  console.log(Zone.current.name); // 'my-context'
+  setTimeout(function(){
+   console.log(Zone.current.name); // 'my-context'
+  },0);
+};
+
+Zone.current.fork({
+  name: 'my-context'
+}).run(main);
+		</code></pre>
+	</section>
+	<section class="slide">
+		<h2 class="shrink shout">
+		Контекст сохраняется
+		</h2>
+	</section>
+	<section class="slide" id="andwhat">
+		<img src="pictures/a2.jpg" alt="">
+		<style>
+			#andwhat img{
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+		</style>
+	</section>
+	<section class="slide">
+		<h2>А что будет, если вместо setTimeout поставить вызов или цепочку вызовов стороннего кода?</h2>
+		<h2 class="next">Или независимый модуль из своего кода?</h2>
+	</section>
+	<section class="slide">
+		<pre class="line-numbers" data-start="1"><code class="language-javascript">var main = function(){
+  thirdPartyCode(function(){
+    throw 'error';
+  },0);
+};
+
+Zone.current.fork({
+  name: 'my-context',
+  onHandleError: function(){
+    console.log('error');
+    return false;
+  }
+}).run(main);</code></pre>
+	</section>
+	<section class="slide">
+		<h2>
+			Так можно ставить задачи в райке или в джире
+		</h2>
+	</section>
+	<section class="slide">
+		<h2>Перехватываем</h2>
+		<ul>
+			<li>
+				MicroTask - выполняется немедленно.
+			</li>
+			<li>
+				MacroTask - тайминги (setTimeout)
+			</li>
+			<li>
+				EventTask - события, могут произойти или не произойти.
+			</li>
+		</ul>
+	</section>
+	<section class="slide">
+		<h2>Колбеки</h2>
+		<ul>
+			<li>onFork</li>
+			<li>onIntercept</li>
+			<li>onInvoke</li>
+			<li>onHandleError</li>
+			<li>onScheduleTask</li>
+			<li>onInvokeTask</li>
+			<li>onCancelTask</li>
+			<li>onHasTask</li>
+		</ul>
+	</section>
+	<section class="slide">
+		<h2>Применение</h2>
+		<ul>
+			<li class="next">Трекинг</li>
+			<li class="next">Обработка ошибок</li>
+			<li class="next">Профилирование</li>
+			<li class="next">Замена $digest цикла ;)</li>
+		</ul>
+	</section>
+	<section class="slide">
+		<h2>Есть javascript и typescript версия</h2>
+		<p>
+			<a href="https://github.com/angular/zone.js/">здесь</a>
+		</p>
+		<ul>
+			<li class="next">В Dart зоны есть по умолчанию</li>
+			<li class="next">В angular2 зонами разруливаются проблемы с $digest</li>
+		</ul>
+	</section>
+	<section class="slide">
+		<h2>Победа</h2>
+		<img src="pictures/a4.gif" alt="">
+	</section>
+	<section class="slide">
+		<h2>История 1</h2>
+		<h2 class="active-item">История 2</h2>
+	</section>
+	<section class="slide" id="s1">
+		<h2 class="shout shrink">Уроки велосипедостроения</h2>
+		<img src="pictures/1.jpg" alt="" class="cover">
+		<style>
+			#s1 h2 {
+				color:#FFF;
+				font-size: 90px;
+			}
+			#s1 img {
+				width: 100%;
+			}
+		</style>
+	</section>
+	<section class="slide">
+		<h2 class="shout">Простое приложение</h2>
+	</section>
+	<section class="slide" id="s2">
+		<img src="pictures/2.png" alt="" class="cover">
+	</section>
+	<section class="slide" id="s3">
+		<img src="pictures/3.png" alt="" class="cover">
+	</section>
+	<section class="slide" id="s4">
+		<img src="pictures/4.png" alt="" class="cover">
+	</section>
+	<section class="slide" id="s5">
+		<img src="pictures/5.png" alt="" class="cover">
+	</section>
+	<section class="slide" id="s6">
+		<img src="pictures/4.png" alt="" class="cover">
+	</section>
+	<section class="slide" id="s7">
+		<h2>Простой код:</h2>
+		<pre data-line="2"><code class="language-javascript">//Класс, для всего приложения
+AppView = Backbone.View.extend({
+// флаги, описание событий, методы
+});
+
+//  Класс для задачи в листе
+TodoView = Backbone.View.extend({
+// флаги, описание событий, методы
+});
+</code></pre>
+	<style>
+		#s7 code {
+			font-size: 16px;
+		}
+	</style>
+	</section>
+	<section class="slide" id="s8">
+		<h2 class="next">Ты хорошо поработал, но мы хотим чуть-чуть расширить функциональность</h2>
+		<img class="cover" src="pictures/6.jpg" alt="">
+		<style>
+			#s8 h2 {
+				color: #8CC53F;
+			}
+		</style>
+	</section>
+	<section class="slide" id="s9">
+		<h2 >Повтореяем задачу</h2>
+		<pre class="next"><code class="language-javascript">//  Класс для задачи в листе
+TodoView = Backbone.View.extend({
+	isRepeat: true, // флаг
+	// Логика для повторяющихся событий
+	// ...
+});
+</code></pre>
+	</section>
+	<section class="slide" id="s11">
+		<h2>
+			Потом напишем еще немного кода...
+		</h2>
+		<pre class="next line-numbers" data-start="1"><code class="language-javascript">	isRepeat: true,
+	clickHandler: function(){
+		//...
+		if(this.isRepeat){
+			this.showRepeatModal();
+		}
+		// ... код для других флагов
+	}
+</code></pre>
+	<style>
+			#s11 code {
+				font-size: 17px;
+			}
+	</style>
+	</section>
+	<section class="slide">
+		<h2 class="shout shrink">Победа!</h2>
+	</section>
+	<section class="slide" id="s9_1">
+		<img src="pictures/7.jpg" alt="" class="cover">
+		<style>
+			#s9_1 img{
+				width: 100%;
+				max-height: none;
+			}
+		</style>
+	</section>
+	<section class="slide" id="s10">
+		<h2>
+			А потом, спустя несколько месяцев
+		</h2>
+		<pre><code class="language-javascript">//  Класс для задачи в листе
+TodoView = Backbone.View.extend({
+	isRepeat: true,
+	importedFromWrike,
+	hasReaded,
+	hasPermissions,
+	changed,
+	synchronized,
+	//  еще 500 строк кода для  обработчиков и различных методов
+});
+</code></pre>
+<style>
+		#s10 code {
+			font-size: 16px;
+		}
+</style>
+	</section>
+	<section class="slide">
+		<h2 class="shrink shout">Давнокод!</h2>
+	</section>
+	<section class="slide" id="s10_1">
+		<img class="cover" src="pictures/10.jpg" alt="">
+		<style>
+			#s10_1 img{
+				width: 100%;
+				max-height: none;
+			}
+		</style>
+	</section>
+	<section class="slide" id="s12">
+		<img class="cover next" src="pictures/8.jpg" alt="">
+		<h2>Такой код характерен для многих фреймоворков.</h2>
+		<h2 class="next">Совпадение?</h2>
+		<style>
+			#s12 .next.active ~ h2 {
+				color: #fff;
+			}
+			#s12 p {
+				color: #fff;;
+			}
+		</style>
+	</section>
+	<section class="slide" id="s13">
+		<img class="cover next" src="pictures/9.jpg" alt="">
+		<h2>Выход есть</h2>
+		<style>
+			#s13 img {
+				width: 100%;
+				max-height: none;
+			}
+			#s13 h2{
+				margin-top: 2em;
+			}
+			#s13 .active + h2 {
+				color: #fff;
+			}
+		</style>
+	</section>
+	<section class="slide" id="s14">
+		<h2>Наследование</h2>
+		<pre><code class="language-javascript">TodoView = Backbone.View.extend({
+	//  базовая логика
+});
+TodoRepeatView = Backbone.View.extend(TodoView,{
+	// реализация логики для повторяющихся событий
+});
+</code></pre>
+<style>
+		#s14 code {
+			font-size: 16px;
+		}
+</style>
+	</section>
+	<section class="slide" id="s15">
+		<h2>А потом мы узнаём про миксины...</h2>
+		<pre><code class="language-javascript">MySuperView = Backbone.View.extend(
+	TodoRepeatView,
+	MyFeature1View,
+	MyFeature2View,
+	MyFeature3View,
+	MyFeature4View,
+	TodoView,{
+});
+</code></pre>
+<style>
+		#s15 code {
+			font-size: 17px;
+		}
+</style>
+	</section>
+	<section class="slide" id="s16">
+		<h2>Пример родительского миксина</h2>
+		<pre data-line="3"><code class="language-javascript">MyFeature1View = Backbone.View.extend({
+	myFeature1method: function(arg){
+		console.log(arg.foo);
+    }
+});
+</code></pre>
+<style>
+		#s16 code {
+			font-size: 17px;
+		}
+</style>
+	</section>
+	<section class="slide" id="s17">
+		<h2>А что случится, если нужно поменять родительское api</h2>
+		<pre data-line="3"><code class="language-javascript">MyFeature1View = Backbone.View.extend({
+	myFeature1method: function(arg){
+		arg.newFoo.call(this);
+    }
+});</code></pre>
+<style>
+		#s17 code {
+			font-size: 17px;
+		}
+</style>
+	</section>
+	<section class="slide">
+		<h2>Выводы</h2>
+		<ul>
+			<li>Наследование перестает работать, когда меняется поведение базового класса</li>
+			<li>Тяжело найти класс, в котором находится тот или иной метод</li>
+		</ul>
+	</section>
+	<section class="slide" id="s18">
+		<h2>Возможно, стоит использовать композицию?</h2>
+		<pre><code class="language-javascript">MySuperView = Backbone.View.extend({
+	repeater: new RepeatBehavior(),
+	render: function(){
+	//...
+		repeater.myFeature1method(arg);
+	//...
+	}
+});
+</code></pre>
+	<style>
+		#s18 code {
+			font-size: 16px;
+		}
+	</style>
+	</section>
+	<section class="slide">
+		<h2>А что будет, если способ инициализации зависимости поменяется?</h2>
+	</section>
+	<section class="slide" id="s19_">
+		<pre data-line="2"><code class="language-javascript">MySuperView = Backbone.View.extend({
+	repeater: new RepeatBehavior(),
+	render: function(){
+	//...
+		repeater.myFeature1method(arg);
+	//...
+	}
+});
+</code></pre>
+	<style>
+		#s19_ code {
+			font-size: 17px;
+		}
+	</style>
+	</section>
+	<section class="slide" id="s19">
+		<pre data-line="2"><code class="language-javascript">MySuperView = Backbone.View.extend({
+	repeater: new RepeatBehavior(newParams),
+	render: function(){
+	//...
+		repeater.myFeature1method(arg);
+	//...
+	}
+});
+</code></pre>
+	<style>
+		#s19 code {
+			font-size: 17px;
+		}
+	</style>
+	</section>
+	<section class="slide" id="s20">
+		<h2>Мы правда хотим менять во всех местаx где инициализировался класс?</h2>
+		<pre class="next"><code class="language-bash">grep -inIEr –color=ALWAYS –include="*.js"
+"View.*=" source/code/directory/</code></pre>
+		<p class="next">Конечно, можно использовать ctrl/CMD + F, но сути это не меняет</p>
+	</section>
+	<section class="slide" id="s21">
+		<h2>
+			Инверсия управления
+			<small>
+				(Inversion of Control, IoC)
+			</small>
+		</h2>
+		<ul>
+			<li>
+				Модули верхнего уровня не должны зависеть от модулей нижнего уровня. И те, и другие должны зависеть от абстракции.
+			</li>
+			<li>
+				Абстракции не должны зависеть от деталей. Детали должны зависеть от абстракций.
+			</li>
+		</ul>
+		<h3>Способы реализации</h3>
+		<ol>
+			<li>Factory pattern</li>
+			<li>Service locator</li>
+			<li>Dependency injection</li>
+		</ol>
+		<style>
+			#s21 p, #s21 ul, #s21 ol {
+				font-size: 16px;
+			}
+			#s21 h3 {
+				font-size: 1.6em;;
+			}
+			#s21 h2 small {
+				font-size: 0.6em;
+			}
+		</style>
+	</section>
+	<section class="slide" id="s22">
+		<h2>Service locator</h2>
+		<pre><code class="language-javascript">window.loc = new Locator(),
+    helloService = {
+        say : function (name) { return 'Hello ' + (name || 'World') }
+    }
+loc.register('hello', helloService);
+
+function SomeClass(locator) {
+    var hello = locator.resolve('hello');
+
+    this.say = function () {
+        var name = this.constructor.name;
+        return hello.say(name);
+    };
+};
+		</code></pre>
+		<style>
+			#s22 code {
+				font-size: 11px;
+			}
+			#s22 {
+				overflow: auto;
+			}
+		</style>
+	</section>
+	<section class="slide" id="s24">
+		<h2>Ничего не напоминает?</h2>
+		<pre><code class="language-javascript">angular.module('myModule', [])
+.factory('serviceId', ['depService', function(depService) {
+  // ...
+}])
+		</code></pre>
+		<style>
+			#s24 code {
+				font-size: 16px;
+			}
+		</style>
+	</section>
+	<section class="slide">
+		<h2>
+			AngularJS первой версии использует паттерн сервис локатор для внедрения зависимостей
+		</h2>
+		<p>
+			Основная проблема в том, что мы ничего не сможем сказать о типе внедренной зависимости,  плачем, колемся, но используем grep.
+		</p>
+	</section>
+	<section class="slide" id="s25">
+		<h2>
+			Хватит это терпеть!
+		</h2>
+		<img src="pictures/11.jpg" alt="" class="cover">
+		<style>
+			#s25 img {
+				height: 100%;
+				max-width: none;
+			}
+			#s25 h2 {
+				color: #fff;;
+			}
+		</style>
+	</section>
+	<section class="slide" id="s26">
+		<h2>
+			У нас есть нормальный DI
+			<small>
+				<a href="https://github.com/angular/di.js">https://github.com/angular/di.js</a>
+			</small>
+		</h2>
+		<pre><code class="language-javascript">@Inject(Grinder, Pump, Heater)
+export class CoffeeMaker {
+	constructor(grinder, pump, heater) {
+	// ...
+	}
+	brew() {
+		console.log('Brewing a coffee...');
+	}
+}</code></pre>
+		<style>
+			#s26 code {
+				font-size: 17px;
+			}
+			#s26 small {
+				font-size: 0.6em;
+			}
+		</style>
+	</section>
+	<section class="slide" id="s26_">
+		<pre data-line="1"><code class="language-javascript">@Inject(Grinder, Pump, Heater)
+export class CoffeeMaker {
+	constructor(grinder, pump, heater) {
+	// ...
+	}
+	brew() {
+		console.log('Brewing a coffee...');
+	}
+}</code></pre>
+		<style>
+			#s26_ code {
+				font-size: 17px;
+			}
+		</style>
+	</section>
+	<section class="slide" id="s26__">
+		<pre data-line="3"><code class="language-javascript">@Inject(Grinder, Pump, Heater)
+export class CoffeeMaker {
+	constructor(grinder, pump, heater) {
+	// ...
+	}
+	brew() {
+		console.log('Brewing a coffee...');
+	}
+}</code></pre>
+		<style>
+			#s26__ code {
+				font-size: 17px;
+			}
+		</style>
+	</section>
+	<section class="slide" id="s27">
+		 <h2>
+			 Появляются типы
+		 </h2>
+		<pre class="line-numbers"><code class="language-javascript">@Injectable()
+@Inject(Logger)
+export class HeroService {
+	constructor(private _logger: Logger) {  }
+	getHeroes() {
+		this._logger.log('Getting heroes ...')
+		return HEROES;
+	}
+}</code></pre>
+		<style>
+			#s27 code {
+				font-size: 17px;
+			}
+			#s27 small {
+				font-size: 0.6em;
+			}
+		</style>
+	</section>
+	<section class="slide" id="s27_">
+		<pre><code class="language-javascript">var injectorClass = Injector.resolveAndCreate([
+	HeroService,
+	new Provider(Logger, { useClass: ServerLogger })
+]);
+expect(injectorClass.get(Logger) instanceof ServerLogger).toBe(true);
+
+		</code></pre>
+		<style>
+			#s27_ code {
+				font-size: 17px;
+			}
+			#s27_ small {
+				font-size: 0.6em;
+			}
+		</style>
+	</section>
+	<section class="slide">
+		<h2>
+			Если вы используете Angular2, у вас уже есть DI.
+		</h2>
+		<p>
+			Также можно подключить DI <a href="https://github.com/angular/di.js/">отдельно</a>, есть версия для JS, Dart и для Typescript.
+		</p>
+		<ul>
+			<li>
+				<a href="http://inversify.io/">inversify.io</a>
+			</li>
+			<li>
+				<a href="https://github.com/zerkalica/reactive-di">reactive-di</a>
+			</li>
+			<li>
+				<a href="https://github.com/zerkalica/immutable-di">immutable-di</a>
+			</li>
+			<li>
+				<a href="https://github.com/zerkalica/micro-di">micro-di</a>
+			</li>
+		</ul>
+	</section>
+
+	<section class="slide">
+		<h2 class="shout shrink">Спасибо за внимание!</h2>
+	</section>
+	<section class="slide">
+		<h2 class="shout shrink">Вопросы?</h2>
+	</section>
+	<!--
+		To hide progress bar from entire presentation
+		just remove “progress” element.
+		-->
+	<div class="progress"></div>
+	<script src="node_modules/shower-core/shower.min.js"></script>
+	<script src="node_modules/prismjs/prism.js"></script>
+	<script src="node_modules/prismjs/plugins/line-highlight/prism-line-highlight.min.js"></script>
+	<script src="node_modules/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+	<!-- Copyright © 2015 Yours Truly, Famous Inc. -->
+	<!-- Photos by John Carey, fiftyfootshadows.net -->
+
+</body>
+</html>
