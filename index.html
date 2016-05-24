@@ -7,7 +7,7 @@
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="node_modules/shower-wrike/styles/screen-16x10.css">
-	<link rel="stylesheet" href="node_modules/prismjs/themes/prism-okaidia.css" media="all">
+	<link rel="stylesheet" href="node_modules/prismjs/themes/prism.css" media="all">
 	<link rel="stylesheet" href="node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css" media="all">
 	<link rel="shortcut icon" href="pictures/favicon.ico">
 	<link rel="stylesheet" href="node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css" media="all">
@@ -30,12 +30,23 @@
 			margin: 0;
 			width: 100%;
 		}
+		.slide.active {
+			padding: 40px 100px 0;
+		}
 		.slide .active-item {
 			color: #8CC53F;
 		}
 		.slide.img h2 {
 			color: #fff;
 		}
+		.slide h1 {
+			font-size: 100px;
+		}
+		.centered {
+			margin-top: 6em;
+		    margin-left: 2em;
+		}
+
 		img.v {
 			height: 100%;
 			max-width: none;
@@ -47,19 +58,17 @@
 	</style>
 	<header class="caption">
 		<h1>
-			Чему можно научиться у Dart: <br>
-			переносим подходы из Dart и Angular2 в SPA на JavaScript
+			Angular not vs React
 		</h1>
-		<p>Алексей Золотых</p>
+		<p>Гребенщиков Максим</p>
 	</header>
 	<section class="slide" id="h1">
 		<h2>
-			Чему можно научиться у Dart: переносим подходы из Dart и Angular2 в SPA на JavaScript
+			Angular not vs React
 			<small>
-				Алексей Золотых
-				<a href="https://github.com/zolotyh">https://github.com/zolotyh</a>
+				Гребенщиков Максим
+				<a href="https://github.com/Aetet">https://github.com/Aetet</a>
 			</small>
-
 		</h2>
 		<img class="cover" src="pictures/bg.jpg" alt="">
 		<style>
@@ -82,27 +91,81 @@
 		</style>
 	</section>
 	<section class="slide">
-		<h2>О Wrike</h2>
+		<h2>На чем писал:</h2>
 		<ul>
-			<li>Мы работаем с 2007 года</li>
-			<li class="next">11 000 корпоративных клиентов, в числе которых  PayPal, HTC, Citrix, Hootsuite, Pure Storage, Nike, Ecco, Amazon</li>
-			<li class="next">В нашем git более 2 000 000 строк фронтенд кода</li>
-			<li class="next">В нашей команде фронтенда 30 человек</li>
-			<li class="next">Мы используем связку Dart вместе с Angular2 в продакшн</li>
+			<li>
+				Vanilla
+			</li>
+			<li>
+				Backbone
+			</li>
+			<li>
+				React
+			</li>
+			<li>
+				Полный БЭМ-стек
+			</li>
+			<li>
+				Polymer
+			</li>
+			<li>
+				Angular2
+			</li>
 		</ul>
 	</section>
 	<section class="slide">
-		<h2>О докладе</h2>
-		<ul>
-			<li class="next">Доклад состоит из 2х историй</li>
-			<li class="next">Обе истории основаны на реальных примерах</li>
-			<li class="next">Опыт, которым я хочу поделиться, можно применить у себя</li>
-		</ul>
+		<img class="cover v" src="pictures/stop-racism.png" alt="">
 	</section>
 	<section class="slide">
-		<h2 class="active-item">История 1</h2>
-		<h2>История 2</h2>
+		<img class="cover v" src="pictures/react-vs-angular.jpg" alt="">
 	</section>
+	<section class="slide">
+		<div class="centered">
+			<h1 class="active-item">Шаблонизация</h1>
+		</div>
+	</section>
+	<section class="slide">
+		<h2>Angular</h2>
+		<pre><code class="language-dart">@Component(
+	directives: [CORE_DIRECTIVES, SomeWidgetClass],
+	template: ''' &ltdiv class="widget-list">
+	&ltsomeWidget
+		[ngClass]="{isBlue: true}"
+		*ngFor="let model of models"
+		*ngIf="isLoaded"
+		[model]="model"
+		(close)="onClose($event, model)"
+	>&lt/someWidget>
+&lt/div>
+'''
+)class WidgetList { onClose(Event e, Model model) {} }</code></pre>
+	</section>
+	<section class="slide">
+		<h2>React</h2>
+		<pre><code class="language-jsx">class SomeWidget {
+	onClose(e, model) {}
+	render() {
+		var widgets = models.map((model) => {
+			return isLoaded ? ( &ltsomeWidget
+					className="{{cn({isBlue: true})}}"
+					model="model"
+					close="onClose.bind(this, model)" > &lt/someWidget> ) : null;
+		}): return (
+			&ltdiv class="widget-list">
+				{{widgets}}
+			&lt/div>
+		);
+	}
+}</code></pre>
+	</section>
+
+
+
+
+
+
+
+
 		<section class="slide img" id="n1">
 		<h2 class="shout shrink">Zone.js</h2>
 		<img class="cover v" src="pictures/a1.jpg" alt="">
